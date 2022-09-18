@@ -1,0 +1,50 @@
+.table {
+  display: block;
+  margin-top: 20px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  background: #f9f9fb;
+}
+
+.head {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid transparent;
+}
+
+.item:hover {
+  border-bottom: 1px solid #ddd;
+  background: #fff;
+}
+
+.column {
+  display: flex;
+}
+
+.column_color {
+  display: flex;
+  width: 40px;
+}
+
+.column_domain {
+  width: 200px;
+}
+
+.column_checked_at {
+  width: 200px;
+}
+
+.column_status {
+  width: 80px;
+}
+
+.column_actions {
+  display: flex;
+  margin-left: auto;
+}
