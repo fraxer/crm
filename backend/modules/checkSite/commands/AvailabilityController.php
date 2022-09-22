@@ -16,9 +16,7 @@ class AvailabilityController extends Controller {
 
         foreach ($items as $item) {
             if ($item->actualStatus) {
-                $time = strtotime($item->actualStatus->checked_at);
-
-                if ($time % $item->period_checking != 0) {
+                if ($item->actualStatus->period_diff < $item->period_checking * 60) {
                     continue;
                 }
             }
