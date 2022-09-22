@@ -30,9 +30,6 @@ class DefaultController extends Controller
     {
         $items = CheckSite::find()->all();
 
-        $console = new AvailabilityController('availability', \Yii::$app); 
-        $console->runAction('check');
-
         return $this->render('index', [
             'items' => GroupAdapter::groupSites($items),
         ]);
@@ -44,6 +41,9 @@ class DefaultController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
+                $console = new AvailabilityController('availability', \Yii::$app); 
+                $console->runAction('check');
+
                 return $this->redirect(['index']);
             }
         } else {
