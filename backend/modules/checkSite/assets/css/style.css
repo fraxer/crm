@@ -9,16 +9,24 @@
 
 .head {
   display: flex;
+  position: sticky;
+  top: 0;
   margin-bottom: 15px;
+  padding: 5px;
 }
 
-.item {
+.item {}
+
+.data {
   display: flex;
   align-items: center;
+  min-height: 35px;
+  padding: 5px;
   border-bottom: 1px solid transparent;
+  cursor: default;
 }
 
-.item:hover {
+.data:hover {
   border-bottom: 1px solid #ddd;
   background: #fff;
 }
@@ -29,6 +37,8 @@
 
 .column_color {
   display: flex;
+  align-items: center;
+  justify-content: center;
   width: 40px;
 }
 
@@ -46,5 +56,85 @@
 
 .column_actions {
   display: flex;
+  align-items: center;
   margin-left: auto;
+}
+
+.color {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.color_green {
+  background: green;
+}
+
+.color_red {
+  background: red;
+}
+
+.link {
+  margin-left: 10px;
+}
+
+.dropdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-left: 10px;
+}
+
+.dropdown__arrow {
+  content: '';
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-width:  0 2px 2px 0;
+  border-style: solid;
+  border-color: #000;
+  transform-origin: center;
+  transform: rotate(45deg) translateY(-1px) translateX(-1px);
+}
+
+.dropdown_invert .dropdown__arrow {
+  border-width:  0 0 2px 2px;
+  transform: rotate(135deg) translateY(-1px) translateX(1px);
+}
+
+.section > .block {
+  display: none;
+}
+
+.section_open > .block {
+  display: block;
+}
+
+.statuses {
+  display: none;
+  user-select: none;
+}
+
+.statuses_open {
+  display: block;
+}
+
+.status {}
+
+.circle {
+  width: 10px;
+  height: 10px;
+  margin: 0 20px 0 auto;
+  border-radius: 50%;
+  border: 2px solid transparent;
+}
+
+.circle_green {
+  border-color: green;
+}
+
+.circle_red {
+  border-color: red;
 }

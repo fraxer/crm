@@ -15,4 +15,10 @@ class ModuleAsset extends AssetBundle
     public $js = [
         'js/main.js'
     ];
+
+    // public $publishOptions = [
+    //     'only' => [
+    //         'icon/*',
+    //     ]
+    // ];
 }  
