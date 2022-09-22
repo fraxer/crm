@@ -57,11 +57,14 @@ class CheckSite extends \yii\db\ActiveRecord
 
     public function getStatuses()
     {
-        return $this->hasMany(CheckSiteStatus::class, ['site_id' => 'id'])->orderBy('id', 'desc');
+        return $this->hasMany(CheckSiteStatus::class, ['site_id' => 'id'])->orderBy('id desc')->limit(24);
     }
 
     public function getActualStatus()
     {
-        return $this->hasOne(CheckSiteStatus::class, ['site_id' => 'id'])->orderBy('id', 'desc');
+        return $this->hasOne(CheckSiteStatus::class, ['site_id' => 'id'])->orderBy('id desc')->select([
+            '{{check_site_status}}.*',
+            'period_diff' => '(UNIX_TIMESTAMP() - UNIX_TIMESTAMP(checked_at))',
+        ]);
     }
 }

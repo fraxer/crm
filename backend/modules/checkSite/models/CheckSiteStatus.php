@@ -14,6 +14,16 @@ use Yii;
  */
 class CheckSiteStatus extends \yii\db\ActiveRecord
 {
+    public $period_diff;
+
+    public function fields()
+    {
+        $fields = parent::fields();
+        $fields['period_diff'] = 'period_diff';
+
+        return $fields;
+    }
+
     /**
      * {@inheritdoc}
      */

@@ -3,6 +3,7 @@
 return [
 	'title' => 'Домены',
 	'create' => 'Добавить домен',
+	'create_subdomain' => 'Добавить поддомен',
 	'site' => 'Сайт',
 	'checked' => 'Проверено',
 	'status' => 'Статус',
