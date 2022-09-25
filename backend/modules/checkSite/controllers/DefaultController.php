@@ -45,15 +45,13 @@ class DefaultController extends Controller
 
             if ($model->load($this->request->post())) {
 
-                \Yii::debug($model->domain);
-
                 if ($this->domainAlreadyExist($model->domain)) {
                     throw new UserException(\Yii::t('controller', 'domain_already_exist'));
                 }
 
                 if ($model->save()) {
-                    $console = new AvailabilityController('availability', \Yii::$app); 
-                    $console->runAction('check');
+                    $availability = new AvailabilityController('availability', \Yii::$app); 
+                    $availability->actionCheckOne($model->domain);
 
                     return $this->redirect(['index']);
                 }
@@ -75,6 +73,9 @@ class DefaultController extends Controller
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            $availability = new AvailabilityController('availability', \Yii::$app); 
+            $availability->actionCheckOne($model->domain);
+
             return $this->redirect(['index']);
         }
 

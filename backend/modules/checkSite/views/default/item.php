@@ -12,14 +12,14 @@ use yii\helpers\Url;
             <?php if ($isSection) { ?>
                 <div class="color <?= $model->sectionStatus == 200 ? 'color_green' : 'color_red' ?>"></div>
             <?php } else { ?>
-                <div class="color <?= $model->actualStatus->status == 200 ? 'color_green' : 'color_red' ?>"></div>
+                <div class="color <?= @$model->actualStatus->status == 200 ? 'color_green' : 'color_red' ?>"></div>
             <?php } ?>
         </div>
         <div class="column column_domain">
             <a href="https://<?= $model->domain ?>" target="_blank"><?= $model->domain ?></a>
         </div>
-        <div class="column column_checked_at"><?= date('d.m.Y H:i', strtotime($model->actualStatus->checked_at)) ?></div>
-        <div class="column column_status"><?= $isSection ? $model->sectionStatus : $model->actualStatus->status ?></div>
+        <div class="column column_checked_at"><?= date('d.m.Y H:i', strtotime(@$model->actualStatus->checked_at)) ?></div>
+        <div class="column column_status"><?= $isSection ? $model->sectionStatus : @$model->actualStatus->status ?></div>
         <div class="column column_actions">
             <a href="<?= Url::toRoute(['create', 'parent_id' => $model->id]) ?>" class="link" title="<?= Yii::t('item', 'create_subdomain') ?>">
                 <svg width="17px" height="17px" viewBox="0 0 34.398 34.398">

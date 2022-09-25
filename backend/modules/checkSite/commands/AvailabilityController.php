@@ -10,10 +10,18 @@ use yii\helpers\Console;
 
 class AvailabilityController extends Controller {
 
-    public function actionCheck()
+    public function actionCheckAll()
     {
-        $items = CheckSite::find()->all();
+        $this->checkSites(CheckSite::find()->all());
+    }
 
+    public function actionCheckOne($domain)
+    {
+        $this->checkSites(CheckSite::find()->where(['domain' => $domain])->all());
+    }
+
+    private function checkSites(Array& $items)
+    {
         foreach ($items as $item) {
             if ($item->actualStatus) {
                 if ($item->actualStatus->period_diff < $item->period_checking * 60) {
