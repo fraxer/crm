@@ -48,9 +48,9 @@ class CheckSite extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'domain' => 'Domain',
-            'parent_id' => 'Parent Id',
-            'period_checking' => 'Period of checking (min)',
+            'domain' => \Yii::t('form', 'domain'),
+            'parent_id' => \Yii::t('form', 'parent_zone'),
+            'period_checking' => \Yii::t('form', 'period_checking'),
             'created_at' => 'Created At',
         ];
     }

@@ -2,8 +2,8 @@
 
 use yii\helpers\Html;
 
-$this->title = 'Update Domain: ' . $model->domain;
-$this->params['breadcrumbs'][] = ['label' => 'Domains', 'url' => ['index']];
+$this->title = Yii::t('update', 'title') . $model->domain;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('update', 'section_title'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $model->domain;
 ?>
 <div class="task-update">

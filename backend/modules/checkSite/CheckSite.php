@@ -39,6 +39,7 @@ class CheckSite extends \yii\base\Module implements BootstrapInterface
                 'update' => 'update.php',
                 'form' => 'form.php',
                 'item' => 'item.php',
+                'controller' => 'controller.php',
             ],
         ];
     }

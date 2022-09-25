@@ -8,6 +8,8 @@ use backend\modules\checkSite\adapters\GroupAdapter;
 use backend\modules\checkSite\commands\AvailabilityController;
 use yii\web\Controller;
 use yii\filters\AccessControl;
+use yii\web\NotFoundHttpException;
+use yii\base\UserException;
 
 class DefaultController extends Controller
 {
@@ -40,11 +42,21 @@ class DefaultController extends Controller
         $model = new CheckSite();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                $console = new AvailabilityController('availability', \Yii::$app); 
-                $console->runAction('check');
 
-                return $this->redirect(['index']);
+            if ($model->load($this->request->post())) {
+
+                \Yii::debug($model->domain);
+
+                if ($this->domainAlreadyExist($model->domain)) {
+                    throw new UserException(\Yii::t('controller', 'domain_already_exist'));
+                }
+
+                if ($model->save()) {
+                    $console = new AvailabilityController('availability', \Yii::$app); 
+                    $console->runAction('check');
+
+                    return $this->redirect(['index']);
+                }
             }
         } else {
             $model->loadDefaultValues();
@@ -88,7 +100,16 @@ class DefaultController extends Controller
             return $model;
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException(\Yii::t('controller', 'domain_not_found'));
+    }
+
+    protected function domainAlreadyExist($domain)
+    {
+        if (CheckSite::findOne(['domain' => $domain]) !== null) {
+            return true;
+        }
+
+        return false;
     }
 
     private function recursiveRemoveChilds($id)

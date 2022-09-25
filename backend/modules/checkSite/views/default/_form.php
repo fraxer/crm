@@ -12,13 +12,13 @@ $params = [
 ];
 
 $periodChecking = [
-    10 => '10 min',
-    20 => '20 min',
-    30 => '30 min',
-    60 => '1 hour',
-    120 => '2 hour',
-    240 => '3 hour',
-]
+    10 => '10 ' . Yii::t('form', 'minute'),
+    20 => '20 ' . Yii::t('form', 'minute'),
+    30 => '30 ' . Yii::t('form', 'minute'),
+    60 => '1 ' . Yii::t('form', 'hour'),
+    120 => '2 ' . Yii::t('form', 'hour'),
+    240 => '3 ' . Yii::t('form', 'hour'),
+];
 
 ?>
 
@@ -26,14 +26,14 @@ $periodChecking = [
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'parent_id')->dropDownList($items, $params)->label('Parent zone') ?>
+    <?= $form->field($model, 'parent_id')->dropDownList($items, $params)->label(Yii::t('form', 'parent_zone')) ?>
 
-    <?= $form->field($model, 'domain')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'domain')->textInput(['maxlength' => true])->label(Yii::t('form', 'domain')) ?>
 
-    <?= $form->field($model, 'period_checking')->dropDownList($periodChecking)->label('Period of checking (min)') ?>
+    <?= $form->field($model, 'period_checking')->dropDownList($periodChecking)->label(Yii::t('form', 'period_checking')) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton(Yii::t('form', 'save'), ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

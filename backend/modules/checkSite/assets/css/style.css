@@ -20,8 +20,8 @@
 .data {
   display: flex;
   align-items: center;
-  min-height: 35px;
-  padding: 5px;
+  min-height: 41px;
+  padding: 8px 5px;
   border-bottom: 1px solid transparent;
   cursor: default;
 }
@@ -60,6 +60,14 @@
   margin-left: auto;
 }
 
+.column_actions svg {
+  fill: #818181;
+}
+
+.column_actions svg:hover {
+  fill: #000;
+}
+
 .color {
   width: 10px;
   height: 10px;
@@ -67,7 +75,7 @@
 }
 
 .color_green {
-  background: green;
+  background: #00e300;
 }
 
 .color_red {
@@ -85,6 +93,7 @@
   width: 24px;
   height: 24px;
   margin-left: 10px;
+  cursor: pointer;
 }
 
 .dropdown__arrow {
@@ -123,7 +132,34 @@
 
 .status {}
 
+.status:first-child .circle::before {
+  display: none;
+}
+
+.status:last-child .circle::after {
+  display: none;
+}
+
+.status .circle::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 2px;
+  width: 2px;
+  height: 17px;
+}
+
+.status .circle::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 2px;
+  width: 2px;
+  height: 18px;
+}
+
 .circle {
+  position: relative;
   width: 10px;
   height: 10px;
   margin: 0 20px 0 auto;
@@ -132,9 +168,17 @@
 }
 
 .circle_green {
-  border-color: green;
+  border-color: #00e300;
+}
+
+.circle_green::before, .circle_green::after {
+  background: #00e300;
 }
 
 .circle_red {
   border-color: red;
+}
+
+.circle_red::before, .circle_red::after {
+  background: red;
 }

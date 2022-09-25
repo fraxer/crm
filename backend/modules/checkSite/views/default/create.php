@@ -5,8 +5,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model frontend\models\Task */
 
-$this->title = 'Add site';
-$this->params['breadcrumbs'][] = ['label' => 'Domains', 'url' => ['index']];
+$this->title = Yii::t('create', 'title');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('create', 'section_title'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="task-create">
