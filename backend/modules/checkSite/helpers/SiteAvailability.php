@@ -55,10 +55,16 @@ class SiteAvailability
     {
         $ch = curl_init($this->url);
 
+        $headers = [
+            'Cache-Control: no-cache',
+            'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36',
+        ];
+
         curl_setopt($ch, CURLOPT_VERBOSE, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         $ret = curl_exec($ch);
 
