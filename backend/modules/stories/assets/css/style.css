@@ -1,0 +1,75 @@
+.albums {
+  display: flex;
+  flex-flow: wrap;
+  gap: 20px;
+  user-select: none;
+}
+
+.album {
+  max-width: 100px;
+}
+
+.album__circle {
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  width: 80px;
+  height: 80px;
+  margin: auto;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  background: #fff;
+}
+
+.album__circle:hover .album__controls {
+  opacity: 1;
+  visibility: visible;
+}
+
+.album__image {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(100% - 8px);
+  height: calc(100% - 8px);
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 1;
+}
+
+.album__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  border-radius: 50%;
+  visibility: hidden;
+  background: rgba(0,0,0, 0.7);
+  transition: 0.2s;
+  z-index: 2;
+}
+
+.album__open {}
+
+.album__edit {}
+
+.album__icon {
+  fill: #fff;
+  cursor: pointer;
+}
+
+.album__name {
+  overflow: hidden;
+  width: 100%;
+  margin: 3px 0 0;
+  font-size: 14px;
+  text-align: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: default;
+}
