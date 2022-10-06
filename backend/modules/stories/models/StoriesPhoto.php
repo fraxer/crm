@@ -53,18 +53,13 @@ class StoriesPhoto extends \yii\db\ActiveRecord
         ];
     }
 
-    public function upload()
+    public function upload($path)
     {
         if ($this->validate()) {
-            $this->imageFile->saveAs($this->getFilePath());
+            $this->imageFile->saveAs($path);
             return true;
         } else {
             return false;
         }
-    }
-
-    public function getFilePath()
-    {
-        return 'uploads/' . $this->imageFile->baseName . '.' . $this->imageFile->extension;
     }
 }

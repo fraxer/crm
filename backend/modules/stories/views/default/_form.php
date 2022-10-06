@@ -14,13 +14,15 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'imageFile')->fileInput() ?>
+    <?= $form->field($model, 'albumImage')->fileInput() ?>
 
     <?php if (!empty($model->image)) { ?>
         <img src="<?= $model->image ?>">
     <?php } ?>
 
     <?= $form->field($model, 'rank')->textInput() ?>
+
+    <?= $form->field($model, 'photoImages[]')->fileInput(['multiple' => true]) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
@@ -32,21 +34,19 @@ use yii\widgets\ActiveForm;
 
     <hr>
 
-    <h2>Photos</h2>
-
     <?php if ($model->id) { ?>
-        <?= Html::a('photo_add', ['photo/create', 'album_id' => $model->id], ['class' => 'btn btn-primary']) ?>
-    <?php } ?>
 
-    <br>
-    <br>
+        <h2>Photos</h2>
 
-    <?php foreach ($model->photos as $photo) { ?>
-        <div class="" style="display: flex;">
-            <div><?= $photo->id ?> -</div>
-            <div><?= $photo->image ?> -</div>
-            <div>del</div>
-        </div>
+        <?= count($model->photos) ? '' : 'Upload photos' ?>
+
+        <?php foreach ($model->photos as $photo) { ?>
+            <div class="" style="display: flex;">
+                <div><?= $photo->id ?> -</div>
+                <div><?= $photo->image ?> -</div>
+                <div>del</div>
+            </div>
+        <?php } ?>
     <?php } ?>
 
 </div>

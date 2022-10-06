@@ -4,21 +4,20 @@ namespace backend\modules\stories\controllers;
 
 use Yii;
 use backend\modules\stories\models\StoriesAlbum;
-use backend\modules\stories\models\StoriesForm;
+use backend\modules\stories\models\StoriesPhoto;
+use backend\modules\stories\helpers\Photo;
+use backend\modules\stories\helpers\PoolFiles;
+use backend\modules\stories\helpers\FileStructure;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\UploadedFile;
 use yii\web\NotFoundHttpException;
+use yii\base\UserException;
 use yii\filters\VerbFilter;
+use yii\db\Query;
 
-/**
- * DefaultController implements the CRUD actions for StoriesAlbum model.
- */
 class DefaultController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
         return array_merge(
@@ -34,11 +33,6 @@ class DefaultController extends Controller
         );
     }
 
-    /**
-     * Lists all StoriesAlbum models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
         return $this->render('index', [
@@ -46,58 +40,67 @@ class DefaultController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single StoriesAlbum model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * Creates a new StoriesAlbum model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreate()
     {
-        $modelForm = new StoriesForm();
+        $model = new StoriesAlbum();
 
         if ($this->request->isPost) {
-            $modelForm->imageFile = UploadedFile::getInstance($modelForm, 'imageFile');
+            $poolFiles = new PoolFiles();
 
-            if (!$modelForm->upload()) {
-                throw new NotFoundHttpException('Error opload album image');
-            }
+            $transaction = \Yii::$app->db->beginTransaction();
 
-            $modelAlbum = new StoriesAlbum();
-            $modelAlbum->attributes = $this->request->post('StoriesForm');
-            $modelAlbum->image = $modelForm->getFilePath();
+            try {
+                if (!$model->load($this->request->post())) {
+                    throw new Exception('can\'t load model');
+                }
 
-            if ($modelAlbum->save()) {
+                $model->albumImage = UploadedFile::getInstance($model, 'albumImage');
+                $model->photoImages = UploadedFile::getInstances($model, 'photoImages');
+
+                if (!$model->save()) {
+                    throw new UserException('cant save album');
+                }
+
+                $fileStructure = new FileStructure($model->id);
+
+                $fileStructure->createDirectoryAlbumImage();
+
+                $albumImagePath = $fileStructure->createAlbumImagePath($model->albumImage->extension);
+
+                if (!$model->upload($albumImagePath)) {
+                    throw new UserException('Error opload album image');
+                }
+
+                $model->updateAttributes(['image' => $albumImagePath]);
+
+                $poolFiles->add($albumImagePath);
+
+                $photo = new Photo($model->id);
+
+                foreach ($model->photoImages as $file) {
+                    $path = $photo->create($file);
+
+                    $poolFiles->add($path);
+                }
+
+                $transaction->commit();
+
                 return $this->redirect(['index']);
-            } else {
-                throw new NotFoundHttpException('cant post');
+
+            } catch (\Exception $e) {
+                $transaction->rollBack();
+
+                $poolFiles->deleteFiles();
+
+                throw new UserException($e->getMessage());
             }
         }
 
         return $this->render('create', [
-            'model' => $modelForm,
+            'model' => $model,
         ]);
     }
 
-    /**
-     * Updates an existing StoriesAlbum model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
@@ -111,13 +114,6 @@ class DefaultController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing StoriesAlbum model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
@@ -125,13 +121,6 @@ class DefaultController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the StoriesAlbum model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return StoriesAlbum the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
         if (($model = StoriesAlbum::findOne(['id' => $id])) !== null) {
