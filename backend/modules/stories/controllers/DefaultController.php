@@ -5,10 +5,12 @@ namespace backend\modules\stories\controllers;
 use Yii;
 use backend\modules\stories\models\StoriesAlbum;
 use backend\modules\stories\models\StoriesPhoto;
+use backend\modules\stories\models\StoriesSalon;
+use backend\modules\stories\helpers\Album;
 use backend\modules\stories\helpers\Photo;
 use backend\modules\stories\helpers\PoolFiles;
 use backend\modules\stories\helpers\FileStructure;
-use yii\data\ActiveDataProvider;
+use backend\modules\stories\helpers\ImageThumbnail;
 use yii\web\Controller;
 use yii\web\UploadedFile;
 use yii\web\NotFoundHttpException;
@@ -36,13 +38,14 @@ class DefaultController extends Controller
     public function actionIndex()
     {
         return $this->render('index', [
-            'albums' => StoriesAlbum::find()->orderBy('id desc')->all(),
+            'albums' => StoriesAlbum::find()->orderBy('rank asc')->all(),
         ]);
     }
 
     public function actionCreate()
     {
         $model = new StoriesAlbum();
+        $model->scenario = StoriesAlbum::SCENARIO_CREATE;
 
         if ($this->request->isPost) {
             $poolFiles = new PoolFiles();
@@ -50,35 +53,18 @@ class DefaultController extends Controller
             $transaction = \Yii::$app->db->beginTransaction();
 
             try {
-                if (!$model->load($this->request->post())) {
-                    throw new Exception('can\'t load model');
-                }
+                Album::loadAndSave($model);
 
-                $model->albumImage = UploadedFile::getInstance($model, 'albumImage');
-                $model->photoImages = UploadedFile::getInstances($model, 'photoImages');
+                Album::setRankOnCreate($model);
 
-                if (!$model->save()) {
-                    throw new UserException('cant save album');
-                }
+                $albumImagePath = Album::prepareFileStructure($model);
 
-                $fileStructure = new FileStructure($model->id);
-
-                $fileStructure->createDirectoryAlbumImage();
-
-                $albumImagePath = $fileStructure->createAlbumImagePath($model->albumImage->extension);
-
-                if (!$model->upload($albumImagePath)) {
-                    throw new UserException('Error opload album image');
-                }
-
-                $model->updateAttributes(['image' => $albumImagePath]);
+                Album::uploadAndCropImage($model, $albumImagePath);
 
                 $poolFiles->add($albumImagePath);
 
-                $photo = new Photo($model->id);
-
                 foreach ($model->photoImages as $file) {
-                    $path = $photo->create($file);
+                    $path = Photo::create($file, $model->id);
 
                     $poolFiles->add($path);
                 }
@@ -96,27 +82,77 @@ class DefaultController extends Controller
             }
         }
 
+        $model->rank = Album::getCountAlbums() + 1;
+
         return $this->render('create', [
             'model' => $model,
+            'salons' => StoriesSalon::find()->select(['id', 'name'])->all(),
         ]);
     }
 
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->scenario = StoriesAlbum::SCENARIO_UPDATE;
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($this->request->isPost) {
+
+            $poolFiles = new PoolFiles();
+
+            $transaction = \Yii::$app->db->beginTransaction();
+
+            try {
+                Album::load($model);
+                Album::setRankOnUpdate($model);
+                Album::save($model);
+
+                if (!empty($model->albumImage)) {
+
+                    $albumImagePath = Album::prepareFileStructure($model);
+
+                    Album::deleteImageFile($model->image);
+
+                    Album::uploadAndCropImage($model, $albumImagePath);
+
+                    $poolFiles->add($albumImagePath);
+                }
+
+                if (!empty($model->photoImages)) {
+                    foreach ($model->photoImages as $file) {
+                        $path = Photo::create($file, $model->id);
+
+                        $poolFiles->add($path);
+                    }
+                }
+
+                $transaction->commit();
+
+                return $this->redirect(['update', 'id' => $model->id]);
+
+            }catch (\Exception $e) {
+                $transaction->rollBack();
+
+                $poolFiles->deleteFiles();
+
+                throw new UserException($e->getMessage());
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
+            'salons' => StoriesSalon::find()->select(['id', 'name'])->all(),
         ]);
     }
 
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        $albumId = $model->id;
+
+        Album::delete($model);
+
+        Album::updateRankAlbums($albumId);
 
         return $this->redirect(['index']);
     }

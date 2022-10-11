@@ -4,19 +4,13 @@ namespace backend\modules\stories\models;
 
 use Yii;
 
-/**
- * This is the model class for table "stories_photo".
- *
- * @property int $id
- * @property int|null $album_id
- * @property string $image
- * @property int $rank
- * @property int $duration
- * @property string $created_at
- */
 class StoriesPhoto extends \yii\db\ActiveRecord
 {
     public $imageFile;
+
+    const SCENARIO_CREATE = 'create';
+
+    const SCENARIO_UPDATE = 'update';
     /**
      * {@inheritdoc}
      */
@@ -31,10 +25,12 @@ class StoriesPhoto extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['album_id', 'rank', 'duration'], 'integer'],
+            [['album_id', 'duration'], 'integer'],
+            [['rank'], 'integer', 'min' => 1],
             [['created_at'], 'safe'],
             [['image'], 'string', 'max' => 255],
-            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, jpeg'],
+            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, jpeg', 'on' => self::SCENARIO_CREATE],
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'on' => self::SCENARIO_UPDATE],
         ];
     }
 

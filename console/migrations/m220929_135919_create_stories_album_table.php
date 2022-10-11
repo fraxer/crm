@@ -14,9 +14,11 @@ class m220929_135919_create_stories_album_table extends Migration
     {
         $this->createTable('{{%stories_album}}', [
             'id' => $this->bigPrimaryKey(),
+            'salon_id' => $this->bigInteger(),
             'name' => $this->string()->notNull()->defaultValue(''),
             'image' => $this->string()->notNull()->defaultValue(''),
             'rank' => $this->integer()->notNull()->defaultValue(1),
+            'published' => $this->boolean()->notNull()->defaultValue(true),
             'created_at' => $this->datetime()->notNull()->defaultValue(new \yii\db\Expression("NOW()")),
         ]);
     }

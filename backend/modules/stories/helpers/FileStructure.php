@@ -78,4 +78,15 @@ class FileStructure
     {
         return Yii::$app->security->generateRandomString(30);
     }
+
+    static public function removeEmptyDirectories($path)
+    {
+        $empty = true;
+
+        foreach (glob($path . DIRECTORY_SEPARATOR . "*") as $file) {
+            $empty &= is_dir($file) && self::removeEmptyDirectories($file);
+        }
+
+        return $empty && (is_readable($path) && count(scandir($path)) == 2) && rmdir($path);
+    }
 }
