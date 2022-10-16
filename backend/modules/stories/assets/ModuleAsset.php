@@ -9,10 +9,13 @@ class ModuleAsset extends AssetBundle
     public $sourcePath = '@stories-assets';
 
     public $css = [
+        'css/swiper-bundle.min.css',
         'css/style.css',
+        'css/modal.css',
     ];
 
     public $js = [
-        'js/main.js'
+        'js/swiper-bundle.min.js',
+        'js/main.js',
     ];
 }  

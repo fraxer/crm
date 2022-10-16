@@ -11,6 +11,8 @@ use backend\modules\stories\helpers\Photo;
 use backend\modules\stories\helpers\PoolFiles;
 use backend\modules\stories\helpers\FileStructure;
 use backend\modules\stories\helpers\ImageThumbnail;
+use backend\modules\stories\helpers\BuildAlbumsJson;
+;
 use yii\web\Controller;
 use yii\web\UploadedFile;
 use yii\web\NotFoundHttpException;
@@ -37,8 +39,13 @@ class DefaultController extends Controller
 
     public function actionIndex()
     {
+        $albums = StoriesAlbum::find()->orderBy('rank asc')->all();
+
+        $albumsJson = new BuildAlbumsJson($albums);
+
         return $this->render('index', [
-            'albums' => StoriesAlbum::find()->orderBy('rank asc')->all(),
+            'albums' => $albums,
+            'albumsJson' => $albumsJson->getAlbumsJson(),
         ]);
     }
 

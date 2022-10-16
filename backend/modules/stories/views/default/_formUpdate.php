@@ -5,7 +5,15 @@ use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 
 $duration = [
+    1 => '1 ' . Yii::t('form', 'second'),
+    2 => '2 ' . Yii::t('form', 'second'),
+    3 => '3 ' . Yii::t('form', 'second'),
+    4 => '4 ' . Yii::t('form', 'second'),
     5 => '5 ' . Yii::t('form', 'second'),
+    6 => '6 ' . Yii::t('form', 'second'),
+    7 => '7 ' . Yii::t('form', 'second'),
+    8 => '8 ' . Yii::t('form', 'second'),
+    9 => '9 ' . Yii::t('form', 'second'),
     10 => '10 ' . Yii::t('form', 'second'),
     15 => '15 ' . Yii::t('form', 'second'),
     20 => '20 ' . Yii::t('form', 'second'),
