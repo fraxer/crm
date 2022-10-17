@@ -10,25 +10,23 @@ use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 use yii\filters\VerbFilter;
 use yii\base\UserException;
+use yii\filters\AccessControl;
 
 class PhotoController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
                     ],
                 ],
-            ]
-        );
+            ],
+        ];
     }
 
     public function actionUpdate($id)

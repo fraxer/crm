@@ -15,12 +15,10 @@ class BuildAlbumsJson
 
     public function getAlbumsJson()
     {
-        if (!count($this->albums)) return '{}';
-
         $albums = [];
 
         foreach ($this->albums as $album) {
-            $albums[$album->id] = $this->getAlbumStruct($album);
+            $albums[] = $this->getAlbumStruct($album);
         }
 
         return json_encode($albums);
@@ -29,6 +27,7 @@ class BuildAlbumsJson
     private function getAlbumStruct($album)
     {
         $albumStruct = [
+            'id' => $album->id,
             'name' => $album->name,
             'image' => $album->image,
             'photos' => [],

@@ -25,7 +25,7 @@ class Photo
         $model->imageFile = $file;
         $model->image = $photoPath;
         $model->rank = self::getCountPhotos($albumId) + 1;
-        $model->duration = 10;
+        $model->duration = 5;
 
         if (!$model->save()) {
             throw new UserException('Error create photo');

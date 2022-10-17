@@ -3,8 +3,8 @@
 use yii\helpers\Html;
 use backend\modules\stories\assets\ModuleAsset;
 
-$this->title = 'Create Stories Album';
-$this->params['breadcrumbs'][] = ['label' => 'Stories Albums', 'url' => ['index']];
+$this->title = Yii::t('create', 'title');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('index', 'title'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ModuleAsset::register($this);
 ?>

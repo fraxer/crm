@@ -42,15 +42,12 @@ class Album
         $albumCount = self::getCountAlbums();
 
         if ($model->rank != $albumCount) {
-            $model->updateAttributes(['rank' => $albumCount]);
+            self::updateRankAdjacentAlbums($model);
         }
     }
 
     static public function setRankOnUpdate(&$model)
     {
-        \Yii::debug('rank '. $model->getOldAttribute('rank'));
-        \Yii::debug('rank '. $model->rank);
-
         if ($model->getOldAttribute('rank') != $model->rank) {
             self::updateRankAdjacentAlbums($model);
         }

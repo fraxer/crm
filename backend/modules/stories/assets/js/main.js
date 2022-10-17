@@ -4,8 +4,6 @@ class Slider {
 
   emiter = null
 
-  canChooseAlbum = true
-
   timeout = null
 
   options = {
@@ -29,13 +27,19 @@ class Slider {
       prevEl: '.modalSlider .swiper-button-prev'
     },
     on: {
-      beforeTransitionStart: (function (self) {
+      init: (function (self) {
         return function () {
-          if (this.realIndex + 1 === this.slides.length && self.canChooseAlbum) {
+          if (this.slides.length === 1) {
             self.timeout = setTimeout(() => self.nextAlbum(), self.getSlideDuration(this, this.realIndex))
           }
-
-          self.canChooseAlbum = true
+        }
+      })(this),
+      beforeTransitionStart: (function (self) {
+        return function () {
+          console.log('asd')
+          if (this.realIndex + 1 === this.slides.length) {
+            self.timeout = setTimeout(() => self.nextAlbum(), self.getSlideDuration(this, this.realIndex))
+          }
         }
       })(this),
       navigationNext: (function (self) {
@@ -56,8 +60,6 @@ class Slider {
         return function () {
           if (this.realIndex > this.previousIndex) {
             self.resetNextAlbum()
-          } else {
-            self.canChooseAlbum = true
           }
         }
       })(this)
@@ -72,7 +74,6 @@ class Slider {
 
   create (selector) {
     this.slider = new Swiper(selector, this.options)
-    this.canChooseAlbum = true
   }
 
   destroy() {
@@ -95,7 +96,6 @@ class Slider {
   }
 
   resetNextAlbum () {
-    this.canChooseAlbum = false
     this.resetTimeout()
   }
 
@@ -115,8 +115,8 @@ class SliderStruct {
     if (!this.sliderContainer) new Error('Slider container not found')
   }
 
-  async build (albumId) {
-    const album = albumJson[albumId]
+  async build (albumIndex) {
+    const album = albumJson[albumIndex]
 
     const container = this.sliderContainer.cloneNode(true)
 
@@ -168,24 +168,23 @@ class Emiter {
   }
 
   nextAlbum () {
-    const keys = Object.keys(albumJson)
     let currentKeyFinded = false
-    let albumId = -1
+    let albumIndex = -1
 
-    for (let key of keys) {
+    for (let i = 0; i < albumJson.length; i++) {
       if (currentKeyFinded) {
-        albumId = Number(key)
+        albumIndex = i
         break
       }
 
-      if (Number(key) === this.modal.getAlbumId()) {
+      if (i === this.modal.getAlbumIndex()) {
         currentKeyFinded = true
       }
     }
 
-    if (albumId === -1) return
+    if (albumIndex === -1) return
 
-    this.modal.openAlbum(albumId)
+    this.modal.openAlbum(albumIndex)
   }
 }
 
@@ -212,17 +211,17 @@ class Modal {
 
   emiter = null
 
-  albumId = 0
+  albumIndex = 0
 
-  async open (albumId) {
-    this.setAlbumId(albumId)
+  async open (albumIndex) {
+    this.setAlbumIndex(albumIndex)
 
     this.sliderStruct = new SliderStruct('.modalSlider')
     this.sliderStruct.clear()
-    this.sliderStruct.setContent(await this.sliderStruct.build(albumId))
+    this.sliderStruct.setContent(await this.sliderStruct.build(albumIndex))
 
-    this.setImage(albumId)
-    this.setName(albumId)
+    this.setImage(albumIndex)
+    this.setName(albumIndex)
 
     this.sliderInstance = new Slider()
     this.sliderInstance.create('.modalSlider')
@@ -237,21 +236,21 @@ class Modal {
   close () {
     document.querySelector('.stories-modal').classList.remove('stories-modal_open')
 
-    this.setAlbumId(0)
+    this.setAlbumIndex(0)
     this.sliderInstance.destroy()
     this.sliderStruct.clear()
   }
 
-  setAlbumId (albumId) {
-    this.albumId = albumId
+  setAlbumIndex (albumIndex) {
+    this.albumIndex = albumIndex
   }
 
-  getAlbumId () {
-    return this.albumId
+  getAlbumIndex () {
+    return this.albumIndex
   }
 
-  setImage (albumId) {
-    const album = albumJson[albumId]
+  setImage (albumIndex) {
+    const album = albumJson[albumIndex]
 
     if (!album) return new Error('Album not fount in the json struct')
 
@@ -262,8 +261,8 @@ class Modal {
     image.setAttribute('src', album.image)
   }
 
-  setName (albumId) {
-    const album = albumJson[albumId]
+  setName (albumIndex) {
+    const album = albumJson[albumIndex]
 
     if (!album) return new Error('Album not fount in the json struct')
 
@@ -274,13 +273,13 @@ class Modal {
     span.innerText = album.name
   }
 
-  async openAlbum (albumId) {
-    this.setAlbumId(albumId)
-    this.sliderStruct.setContent(await this.sliderStruct.build(albumId))
+  async openAlbum (albumIndex) {
+    this.setAlbumIndex(albumIndex)
+    this.sliderStruct.setContent(await this.sliderStruct.build(albumIndex))
     this.sliderInstance.destroy()
 
-    this.setImage(albumId)
-    this.setName(albumId)
+    this.setImage(albumIndex)
+    this.setName(albumIndex)
 
     this.sliderInstance.create('.modalSlider')
   }

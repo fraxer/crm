@@ -3,11 +3,8 @@
 use yii\helpers\Html;
 use backend\modules\stories\assets\ModuleAsset;
 
-/* @var $this yii\web\View */
-/* @var $model backend\modules\stories\models\StoriesAlbum */
-
-$this->title = 'Update Stories Album: ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Stories Albums', 'url' => ['index']];
+$this->title = Yii::t('update', 'title') . ': ' . $model->name;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('index', 'title'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name];
 ModuleAsset::register($this);
 ?>

@@ -19,6 +19,11 @@
   border-radius: 50%;
   border: 1px solid #ddd;
   background: #fff;
+  transition: 0.2s;
+}
+
+.album__circle:hover {
+  background: #ededed;
 }
 
 .album__circle:hover .album__controls {
@@ -35,6 +40,7 @@
   border-radius: 50%;
   object-fit: cover;
   object-position: center;
+  cursor: pointer;
   z-index: 1;
 }
 
