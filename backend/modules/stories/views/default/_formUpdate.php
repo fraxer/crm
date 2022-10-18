@@ -45,11 +45,11 @@ $salons = ArrayHelper::map($salons, 'id', 'name');
     <?php } ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-        <?= Html::a('Delete', ['default/delete', 'id' => $model->id], [
+        <?= Html::submitButton(Yii::t('form', 'album_save'), ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('form', 'album_delete'), ['default/delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => Yii::t('form', 'table_confirm_delete'),
+                'confirm' => Yii::t('form', 'album_confirm_delete'),
                 'method' => 'post',
             ],
         ]) ?>
@@ -99,7 +99,7 @@ $salons = ArrayHelper::map($salons, 'id', 'name');
                     <?= Html::a(Yii::t('form', 'table_delete'), ['photo/delete', 'id' => $photoModel->id], [
                         'class' => 'btn btn-danger',
                         'data' => [
-                            'confirm' => 'Are you sure you want to delete photo?',
+                            'confirm' => Yii::t('form', 'table_confirm_delete'),
                             'method' => 'post',
                         ],
                     ]) ?>

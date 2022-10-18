@@ -6,6 +6,8 @@ return [
 	'album_rank' => 'Позиция альбома',
 	'photo_images' => 'Фотографии',
 	'album_save' => 'Сохранить',
+	'album_delete' => 'Удалить',
+	'album_confirm_delete' => 'Вы подтверждаете удаление альбома?',
 
 	'photo_title' => 'Фотографии',
 	'photo_add' => 'Выбрать фотографии',
