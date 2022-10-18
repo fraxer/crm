@@ -37,6 +37,9 @@ class Module extends \yii\base\Module
             'basePath'       => '@backend/modules/stories/messages',
             'fileMap'        => [
                 'index' => 'index.php',
+                'create' => 'create.php',
+                'update' => 'update.php',
+                'form' => 'form.php',
             ],
         ];
     }

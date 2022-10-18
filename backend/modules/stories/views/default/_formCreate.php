@@ -12,26 +12,28 @@ $salons = ArrayHelper::map($salons, 'id', 'name');
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
-    <?= $form->field($model, 'salon_id')->radioList($salons, [
-        'item' => function ($index, $label, $name, $checked, $value) {
-            if ($index == 0) $checked = true;
+    <div class="salons">
+        <?= $form->field($model, 'salon_id')->radioList($salons, [
+            'item' => function ($index, $label, $name, $checked, $value) {
+                if ($index == 0) $checked = true;
 
-            $radio = Html::radio($name, $checked, ['value' => $value, 'label' => $label]);
+                $radio = Html::radio($name, $checked, ['value' => $value, 'label' => $label]);
 
-            return Html::tag('label', $radio);
-        },
-    ])->label(false) ?>
+                return Html::tag('label', $radio);
+            },
+        ])->label(false) ?>
+    </div>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'name')->textInput(['maxlength' => true])->label(Yii::t('form', 'album_name')) ?>
 
-    <?= $form->field($model, 'albumImage')->fileInput() ?>
+    <?= $form->field($model, 'rank')->textInput()->label(Yii::t('form', 'album_rank')) ?>
 
-    <?= $form->field($model, 'rank')->textInput() ?>
+    <?= $form->field($model, 'albumImage', ['template' => '{label}<br>{input}{error}{hint}'])->fileInput()->label(Yii::t('form', 'album_image')) ?>
 
-    <?= $form->field($model, 'photoImages[]')->fileInput(['multiple' => true]) ?>
+    <?= $form->field($model, 'photoImages[]', ['template' => '{label}<br>{input}{error}{hint}'])->fileInput(['multiple' => true])->label(Yii::t('form', 'photo_images')) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton(Yii::t('form', 'album_save'), ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

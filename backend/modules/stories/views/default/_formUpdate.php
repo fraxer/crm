@@ -30,43 +30,44 @@ $salons = ArrayHelper::map($salons, 'id', 'name');
 
     <?php $formAlbum = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
-    <?= $formAlbum->field($model, 'salon_id')->radioList($salons)->label(false) ?>
+    <div class="salons">
+        <?= $formAlbum->field($model, 'salon_id')->radioList($salons)->label(false) ?>
+    </div>
 
-    <?= $formAlbum->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    <?= $formAlbum->field($model, 'name')->textInput(['maxlength' => true])->label(Yii::t('form', 'album_name')) ?>
 
-    <?= $formAlbum->field($model, 'albumImage')->fileInput()->label('Replace image') ?>
+    <?= $formAlbum->field($model, 'rank')->textInput()->label(Yii::t('form', 'album_rank')) ?>
+
+    <?= $formAlbum->field($model, 'albumImage', ['template' => '{label}<br>{input}{error}{hint}'])->fileInput()->label(Yii::t('form', 'album_image')) ?>
 
     <?php if (!empty($model->image)) { ?>
-        <img src="<?= $model->image ?>" width="120" height="120">
+        <img src="<?= $model->image ?>" width="120" height="120" class="album-image">
     <?php } ?>
-
-    <?= $formAlbum->field($model, 'rank')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
         <?= Html::a('Delete', ['default/delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete album?',
+                'confirm' => Yii::t('form', 'table_confirm_delete'),
                 'method' => 'post',
             ],
         ]) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
+</div>
+<hr>
+<div class="stories-photo-form">
 
-
-    <hr>
-    <br>
-
-    <h2>Photos</h2>
+    <h2><?= Yii::t('form', 'photo_title') ?></h2>
 
     <?php $formPhotos = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
-    <?= $formPhotos->field($model, 'photoImages[]')->fileInput(['multiple' => true])->label('Add photos') ?>
+    <?= $formPhotos->field($model, 'photoImages[]', ['template' => '{label}<br>{input}{error}{hint}'])->fileInput(['multiple' => true])->label(Yii::t('form', 'photo_add')) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Upload', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton(Yii::t('form', 'photo_upload'), ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
@@ -75,10 +76,10 @@ $salons = ArrayHelper::map($salons, 'id', 'name');
 
         <div class="table">
             <div class="head">
-                <div class="col col_image">Image</div>
-                <div class="col col_rank">Rank</div>
-                <div class="col col_duration">Duration (s)</div>
-                <div class="col col_actions">Actions</div>
+                <div class="col col_image"><?= Yii::t('form', 'table_image') ?></div>
+                <div class="col col_rank"><?= Yii::t('form', 'table_rank') ?></div>
+                <div class="col col_duration"><?= Yii::t('form', 'table_duration') ?></div>
+                <div class="col col_actions"><?= Yii::t('form', 'table_actions') ?></div>
             </div>
             <?php foreach ($model->photos as $photoModel) { ?>
 
@@ -94,8 +95,8 @@ $salons = ArrayHelper::map($salons, 'id', 'name');
                     <?= $formPhoto->field($photoModel, 'duration')->dropDownList($duration)->label(false) ?>
                 </div>
                 <div class="col col_actions">
-                    <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-                    <?= Html::a('Delete', ['photo/delete', 'id' => $photoModel->id], [
+                    <?= Html::submitButton(Yii::t('form', 'table_save'), ['class' => 'btn btn-success']) ?>
+                    <?= Html::a(Yii::t('form', 'table_delete'), ['photo/delete', 'id' => $photoModel->id], [
                         'class' => 'btn btn-danger',
                         'data' => [
                             'confirm' => 'Are you sure you want to delete photo?',

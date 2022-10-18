@@ -12,6 +12,7 @@ class ModuleAsset extends AssetBundle
         'css/swiper-bundle.min.css',
         'css/style.css',
         'css/modal.css',
+        'css/album-form.css',
     ];
 
     public $js = [
